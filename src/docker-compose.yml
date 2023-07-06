@@ -1,0 +1,75 @@
+version: '3.8'
+services:
+  api:
+    container_name: api
+    restart: on-failure
+    build: 
+      context: ./api
+      dockerfile: ./CapitalManagement.Api/Dockerfile
+    ports:
+      - "5000:80"
+    depends_on:
+      - db
+    networks:
+      - appnetwork
+
+  app:
+    container_name: app
+    restart: on-failure
+    build: 
+      context: ./app
+      dockerfile: ./CapitalManagement.Web/Dockerfile
+    ports:
+      - "5001:80"
+    depends_on:
+      - db
+    networks:
+      - appnetwork
+
+  prometheus:
+    container_name: prometheus
+    restart: on-failure
+    image: prom/prometheus
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - api
+      - app
+    networks:
+      - appnetwork
+
+  grafana:
+    container_name: grafana
+    restart: on-failure
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - appnetwork
+
+  db:
+    container_name: postgresql
+    restart: on-failure
+    image: postgres
+    environment:
+      POSTGRES_DB: CapitalManagement
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: MyStrongDbPassword$12
+    ports:
+      - "6432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - appnetwork
+
+volumes:
+  pgdata:
+
+networks:
+  appnetwork:
+    driver: bridge
