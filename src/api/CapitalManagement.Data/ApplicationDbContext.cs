@@ -1,6 +1,4 @@
-﻿using CapitalManagement.Data.Entities;
-
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CapitalManagement.Data
@@ -11,9 +9,5 @@ namespace CapitalManagement.Data
             : base(options)
         {
         }
-
-        public DbSet<Person> People { get; set; }
-
-        public DbSet<TestEntity> Tests { get; set; }
     }
 }

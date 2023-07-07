@@ -15,9 +15,10 @@ namespace CapitalManagement.Api.Controllers
             _context = context;
         }
 
+        [HttpGet]
         public IActionResult Get()
         {
-            var data = _context.People.ToList();
+            var data = _context.Users.ToList();
 
             return Ok(data);
         }
