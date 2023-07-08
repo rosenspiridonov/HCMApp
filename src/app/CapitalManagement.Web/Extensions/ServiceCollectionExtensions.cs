@@ -2,8 +2,10 @@
 
 using CapitalManagement.Common;
 using CapitalManagement.Services.Api;
+using CapitalManagement.Services.Departments;
+using CapitalManagement.Services.Employees;
 using CapitalManagement.Services.Users;
-using CapitalManagement.Web.Middlewares;
+using CapitalManagement.Web.Infrastructure;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -49,8 +51,11 @@ namespace CapitalManagement.Web.Extensions
             services.AddHttpClient(Constants.ApiClientName)
                 .AddHttpMessageHandler<AuthorizationHeaderHandler>();
 
-            services.AddTransient<IApiService, ApiService>();
-            services.AddTransient<IUserService, UserService>();
+            services
+                .AddTransient<IApiService, ApiService>()
+                .AddTransient<IUserService, UserService>()
+                .AddTransient<IDepartmentService, DepartmentService>()
+                .AddTransient<IEmployeeService, EmployeeService>();
 
             return services;
         }

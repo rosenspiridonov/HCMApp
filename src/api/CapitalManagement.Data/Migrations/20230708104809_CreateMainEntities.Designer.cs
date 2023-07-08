@@ -3,6 +3,7 @@ using System;
 using CapitalManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CapitalManagement.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230708104809_CreateMainEntities")]
+    partial class CreateMainEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,9 +54,6 @@ namespace CapitalManagement.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
@@ -82,9 +82,39 @@ namespace CapitalManagement.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("CapitalManagement.Data.Entities.EmployeeDepartmentHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Employees");
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("EmployeeDepartmentHistories");
                 });
 
             modelBuilder.Entity("CapitalManagement.Data.Entities.EmployeeSalary", b =>
@@ -313,21 +343,29 @@ namespace CapitalManagement.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CapitalManagement.Data.Entities.Employee", b =>
+            modelBuilder.Entity("CapitalManagement.Data.Entities.EmployeeDepartmentHistory", b =>
                 {
                     b.HasOne("CapitalManagement.Data.Entities.Department", "Department")
-                        .WithMany("Employees")
+                        .WithMany("EmployeeDepartmentHistories")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CapitalManagement.Data.Entities.Employee", "Employee")
+                        .WithMany("EmployeeDepartmentHistory")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Department");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("CapitalManagement.Data.Entities.EmployeeSalary", b =>
                 {
                     b.HasOne("CapitalManagement.Data.Entities.Employee", "Employee")
-                        .WithMany("Salaries")
+                        .WithMany("EmployeeSalaries")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -388,12 +426,14 @@ namespace CapitalManagement.Data.Migrations
 
             modelBuilder.Entity("CapitalManagement.Data.Entities.Department", b =>
                 {
-                    b.Navigation("Employees");
+                    b.Navigation("EmployeeDepartmentHistories");
                 });
 
             modelBuilder.Entity("CapitalManagement.Data.Entities.Employee", b =>
                 {
-                    b.Navigation("Salaries");
+                    b.Navigation("EmployeeDepartmentHistory");
+
+                    b.Navigation("EmployeeSalaries");
                 });
 #pragma warning restore 612, 618
         }

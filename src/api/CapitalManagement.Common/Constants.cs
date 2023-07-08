@@ -6,10 +6,5 @@
         {
             public const string JwtSecret = "Jwt:Secret";
         }
-
-        public class Roles
-        {
-            private const string HR = "HR";
-        }
     }
 }

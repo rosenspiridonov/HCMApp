@@ -1,9 +1,8 @@
 ﻿using System.Net.Http.Headers;
-using System.Security.Claims;
 
 using CapitalManagement.Common;
 
-namespace CapitalManagement.Web.Middlewares
+namespace CapitalManagement.Web.Infrastructure
 {
     public class AuthorizationHeaderHandler : DelegatingHandler
     {

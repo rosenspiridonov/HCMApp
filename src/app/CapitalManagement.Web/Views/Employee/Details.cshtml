@@ -1,0 +1,17 @@
+﻿@model EmployeeModel
+
+<h2>Employee Details</h2>
+
+<p><strong>First Name:</strong> @Model.FirstName</p>
+<p><strong>Middle Name:</strong> @Model.MiddleName</p>
+<p><strong>Last Name:</strong> @Model.LastName</p>
+<p><strong>Email:</strong> @Model.Email</p>
+<p><strong>Hire Date:</strong> @Model.HireDate.ToString("dd/MM/yyyy")</p>
+<p><strong>PIN:</strong> @Model.PIN</p>
+<p><strong>Salary:</strong> @Model.Salary</p>
+<p><strong>Department Name:</strong> @Model.DepartmentName</p>
+
+<a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-primary">Edit</a>
+<form method="post" action="@Url.Action("Delete", new { id = Model.Id })" style="display:inline">
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form>

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<EmployeeModel>
+
+<h2>Employees</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Hire Date</th>
+            <th>PIN</th>
+            <th>Salary</th>
+            <th>Department Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.FirstName</td>
+                <td>@item.MiddleName</td>
+                <td>@item.LastName</td>
+                <td>@item.Email</td>
+                <td>@item.HireDate.ToString("dd/MM/yyyy")</td>
+                <td>@item.PIN</td>
+                <td>@item.Salary</td>
+                <td>@item.DepartmentName</td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-primary">Edit</a>
+                    <form method="post" action="@Url.Action("Delete", new { id = item.Id })" style="display:inline">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

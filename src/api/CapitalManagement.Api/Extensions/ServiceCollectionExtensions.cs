@@ -1,6 +1,8 @@
 ﻿using System.Text;
 
 using CapitalManagement.Data;
+using CapitalManagement.Services.Departments;
+using CapitalManagement.Services.Employees;
 using CapitalManagement.Services.Users;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -57,7 +59,9 @@ namespace CapitalManagement.Api.Extensions
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             services
-                .AddTransient<IUserService, UserService>();
+                .AddTransient<IUserService, UserService>()
+                .AddTransient<IDepartmentService, DepartmentService>()
+                .AddTransient<IEmployeeService, EmployeeService>();
 
             return services;
         }
