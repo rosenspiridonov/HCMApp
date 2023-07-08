@@ -15,6 +15,11 @@ builder.Services
     .AddIdentity()
     .AddJwtAuthentication(builder.Configuration[Configuration.JwtSecret] ?? throw new InvalidOperationException("Jwt key not found"))
     .AddAuthorization()
+    .AddDistributedMemoryCache()
+    .AddSession(options =>
+    {
+        options.IdleTimeout = TimeSpan.FromMinutes(60);
+    })
     .RegisterServices()
     .AddSwaggerGen()
     .AddControllers();
@@ -31,17 +36,21 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseMigrationsEndPoint();
+    app
+        .UseMigrationsEndPoint()
+        .UseDeveloperExceptionPage();
 }
 
-app.UseSwaggerWithUI()
-.UseRouting()
-.UseCors(options => options
-    .AllowAnyOrigin()
-    .AllowAnyHeader()
-    .AllowAnyMethod())
-.UseAuthentication()
-.UseAuthorization();
+app
+    .UseSwaggerWithUI()
+    .UseRouting()
+    .UseCors(options => options
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod())
+    .UseSession()
+    .UseAuthentication()
+    .UseAuthorization();
 
 app.MapControllers();
 app.Run();

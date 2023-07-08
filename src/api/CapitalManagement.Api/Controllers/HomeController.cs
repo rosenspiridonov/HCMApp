@@ -1,5 +1,6 @@
 ﻿using CapitalManagement.Data;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CapitalManagement.Api.Controllers
@@ -16,6 +17,7 @@ namespace CapitalManagement.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Get()
         {
             var data = _context.Users.ToList();

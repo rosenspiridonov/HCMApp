@@ -60,13 +60,15 @@ namespace CapitalManagement.Api.Controllers
             var roles = await _userManager.GetRolesAsync(user);
             var secret = _configuration[Configuration.JwtSecret];
 
-            var encryptedToken = _userService.GenerateJwtToken(
+            var token = _userService.GenerateJwtToken(
                 user.Id,
                 user.UserName,
                 roles,
                 secret);
 
-            return Ok(new LoginResponseModel { Token = encryptedToken });
+            HttpContext.Session.SetString("jwt", token);
+
+            return Ok(token);
         }
     }
 }
